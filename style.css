@@ -1,0 +1,22 @@
+#inputs{
+    height: 50%;
+    width: 100%;
+}
+
+#encrypter{
+    float: left;
+    width: 50%;
+    height: 100%;
+}
+
+#decrypter{
+    float: right;
+    width: 50%;
+    height: 100%;
+}
+
+#results{
+    height: 50%;
+    width: 100%;
+    text-align: center;
+}
