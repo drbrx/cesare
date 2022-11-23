@@ -47,7 +47,7 @@ fclose($dictionary);
             $result = "";
             $input = str_split($input, 1);
             foreach ($input as $currentChar) {
-                $result .= $alphabet[(strpos(implode($alphabet), $currentChar) + intval($key) % count($alphabet))];
+                $result .= $alphabet[(strpos(implode($alphabet), $currentChar) + intval($key)) % count($alphabet)];
             }
             return $result;
         }
