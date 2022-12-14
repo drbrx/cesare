@@ -2,12 +2,12 @@
 $dictionary = fopen("dictionary.txt", "r");
 if (!feof($dictionary)) {
     $alphabet = explode(",", fgets($dictionary));
-echo var_dump($alphabet);
+    //echo var_dump($alphabet);
     $wordList = array();
     while (!feof($dictionary)) {
-        $wordList[] = fgets($dictionary);
+        $wordList[] = trim(fgets($dictionary));
     }
-echo var_dump($wordList);
+    //echo var_dump($wordList);
 
 }
 fclose($dictionary);
@@ -32,6 +32,8 @@ fclose($dictionary);
         </div>
         <div id="decripter">
             <form action="index.php">
+                <input name="key" type="number" placeholder="Inserire chiave (opzionale)" />
+                <br></br>
                 <textarea name="decInputText" placeholder="inserire testo da cifrare"></textarea>
                 <br></br>
                 <input type="submit" value="Decrypt"></input>
@@ -49,27 +51,42 @@ fclose($dictionary);
             foreach ($input as $currentChar) {
                 $result .= $alphabet[(strpos(implode($alphabet), $currentChar) + intval($key)) % count($alphabet)];
             }
+
             return $result;
         }
 
-        if (isset($_REQUEST)) {
+        if (isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "") || (isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != ""))) {
             if (isset($_REQUEST["key"]) && isset($_REQUEST["encInputText"])) {
-
                 echo "Encrypted the following string: <br></br>" . $_REQUEST["encInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["encInputText"], $_REQUEST["key"]);
             } elseif (isset($_REQUEST["decInputText"])) {
-                $found = false;
-                for ($i = 0; $i < count($alphabet); $i++) {
-                    $tmpResult = mycrypt($alphabet, $_REQUEST["decInputText"], $i);
-                    if (in_array($tmpResult, $wordList)) {
-                        $result = $tmpResult;
-                        $found = true;
-                        break;
-                    }
-                }
-                if ($found) {
-                    echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . $result;
+                if (isset($_REQUEST["key"]) && $_REQUEST["key"] != "") {
+                    echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], (-1 * intval($_REQUEST["key"])));
                 } else {
-                    echo "Decryption failed";
+                    $scores = array();
+                    $length = strlen($_REQUEST["decInputText"]);
+                    $found = false;
+                    for ($i = 0; $i < count($alphabet); $i++) {
+                        $score[$i] = 0;
+
+                        $tmpResult = mycrypt($alphabet, $_REQUEST["decInputText"], $i);
+
+                        for ($start = 0; $start < $length; $start++) {
+                            for ($end = $start + 1; $end <= $length; $end++) {
+                                $substring = substr($tmpResult, $start, $end - $start);
+                                //echo strtolower($tmpResult)."<br></br>";
+                                if (in_array(strtolower($substring), $wordList)) {
+                                    $score[$i] += $end - $start;
+                                    $result = $tmpResult; //va spostato fuori, deve assegnare quello con più punti
+                                }
+                            }
+                        }
+                    }
+
+                    if ($found) {
+                        echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . $result;
+                    } else {
+                        echo "Decryption failed";
+                    }
                 }
             }
         }
