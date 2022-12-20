@@ -23,18 +23,18 @@ fclose($dictionary);
     <div id="inputs">
         <div id="encrypter">
             <form action="index.php">
-                <input name="key" type="number" placeholder="Inserire chiave" />
+                <input name="key" type="number" placeholder="Inserire chiave" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
                 <br></br>
-                <textarea name="encInputText" placeholder="inserire testo da cifrare"></textarea>
+                <textarea name="encInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "")) ? $_REQUEST["encInputText"] : "" ?></textarea>
                 <br></br>
                 <input type="submit" value="Encrypt"></input>
             </form>
         </div>
         <div id="decripter">
             <form action="index.php">
-                <input name="key" type="number" placeholder="Inserire chiave (opzionale)" />
+                <input name="key" type="number" placeholder="Inserire chiave (opzionale)" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
                 <br></br>
-                <textarea name="decInputText" placeholder="inserire testo da cifrare"></textarea>
+                <textarea name="decInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "")) ? $_REQUEST["decInputText"] : "" ?></textarea>
                 <br></br>
                 <input type="submit" value="Decrypt"></input>
             </form>
@@ -49,7 +49,12 @@ fclose($dictionary);
             $result = "";
             $input = str_split($input, 1);
             foreach ($input as $currentChar) {
-                $result .= $alphabet[(strpos(implode($alphabet), $currentChar) + intval($key)) % count($alphabet)];
+                //echo (strpos(implode($alphabet), $currentChar) + intval($key)) % count($alphabet) . "/";
+                $charPos = (strpos(implode($alphabet), $currentChar) + intval($key)) % count($alphabet);
+                if ($charPos < 0) {
+                    $charPos = count($alphabet) + $charPos;
+                }
+                $result .= $alphabet[$charPos];
             }
 
             return $result;
@@ -68,23 +73,27 @@ fclose($dictionary);
 
                     for ($i = 0; $i < count($alphabet); $i++) {
                         $scores[$i] = 0;
+                        $attempt = strtolower(mycrypt($alphabet, $_REQUEST["decInputText"], $i));
+                        //echo $i . " " . $attempt . " ";
+                        $substring = explode(" ", $attempt);
+                        for ($word = 0; $word < count($substring); $word++) {
 
-                        for ($start = 0; $start < $length; $start++) {
-                            for ($end = $start + 1; $end <= $length; $end++) {
-                                $substring = substr($_REQUEST["decInputText"], $start, $end - $start);
-                                echo strtolower(mycrypt($alphabet, $substring, $i)) . "\n";
-                                if (in_array(strtolower(mycrypt($alphabet, $substring, $i)), $wordList)) {
-                                    $scores[$i] += $end - $start;
-                                }
+                            if (in_array($substring[$word], $wordList)) {
+                                $scores[$i] += strlen($substring[$word]);
                             }
                         }
-                        echo "<br></br>";
+                        //echo "<br></br>";
                     }
-
-                    echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], -1 * $scores[array_search(max($scores), $scores)]);
-                    //echo "Decryption failed";
-
+                    //echo "<br></br>";
                 }
+                //echo var_dump($scores);
+                //echo implode($alphabet);
+                //echo max($scores)."/";
+                //echo array_search(max($scores), $scores);
+                echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], -1 * (count($alphabet) - array_search(max($scores), $scores))) . "<br></br>Using key:<br></br>" . array_search(max($scores), $scores);
+                //echo "Decryption failed";
+
+
             }
         }
         ?>
