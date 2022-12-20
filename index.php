@@ -64,29 +64,26 @@ fclose($dictionary);
                 } else {
                     $scores = array();
                     $length = strlen($_REQUEST["decInputText"]);
-                    $found = false;
-                    for ($i = 0; $i < count($alphabet); $i++) {
-                        $score[$i] = 0;
 
-                        $tmpResult = mycrypt($alphabet, $_REQUEST["decInputText"], $i);
+
+                    for ($i = 0; $i < count($alphabet); $i++) {
+                        $scores[$i] = 0;
 
                         for ($start = 0; $start < $length; $start++) {
                             for ($end = $start + 1; $end <= $length; $end++) {
-                                $substring = substr($tmpResult, $start, $end - $start);
-                                //echo strtolower($tmpResult)."<br></br>";
-                                if (in_array(strtolower($substring), $wordList)) {
-                                    $score[$i] += $end - $start;
-                                    $result = $tmpResult; //va spostato fuori, deve assegnare quello con più punti
+                                $substring = substr($_REQUEST["decInputText"], $start, $end - $start);
+                                echo strtolower(mycrypt($alphabet, $substring, $i)) . "\n";
+                                if (in_array(strtolower(mycrypt($alphabet, $substring, $i)), $wordList)) {
+                                    $scores[$i] += $end - $start;
                                 }
                             }
                         }
+                        echo "<br></br>";
                     }
 
-                    if ($found) {
-                        echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . $result;
-                    } else {
-                        echo "Decryption failed";
-                    }
+                    echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], -1 * $scores[array_search(max($scores), $scores)]);
+                    //echo "Decryption failed";
+
                 }
             }
         }
