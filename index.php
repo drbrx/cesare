@@ -40,20 +40,20 @@ function mycrypt($alphabet, $input, $key)
 <body style="background-color: #040033;">
     <div class="container text-center">
         <div id="inputs" class="row">
-            <div id="encrypter" class="col g-5">
+            <div id="encrypter" class="col g-5" style="width: 100%;">
                 <form action="index.php">
-                    <input class="input-group-text" name="key" type="number" placeholder="Inserire chiave" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
+                    <input class="input-group-text" style="width: 100%;" name="key" type="number" placeholder="Inserire chiave" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
                     <br></br>
-                    <textarea class="input-group-text" name="encInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "")) ? $_REQUEST["encInputText"] : "" ?></textarea>
+                    <textarea class="input-group-text" style="width: 100%;" name="encInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "")) ? $_REQUEST["encInputText"] : "" ?></textarea>
                     <br></br>
                     <input class="btn btn-danger mb-3" type="submit" value="Encrypt"></input>
                 </form>
             </div>
-            <div id="decripter" class="col g-5">
+            <div id="decripter" class="col g-5" style="width: 100%;">
                 <form action="index.php">
-                    <input class="input-group-text" name="key" type="number" placeholder="Inserire chiave (opzionale)" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
+                    <input class="input-group-text" style="width: 100%;" name="key" type="number" placeholder="Inserire chiave (opzionale)" value="<?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "" && $_REQUEST["key"]) && $_REQUEST["key"] != "") ? $_REQUEST["key"] : "" ?>" />
                     <br></br>
-                    <textarea class="input-group-text" name="decInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "")) ? $_REQUEST["decInputText"] : "" ?></textarea>
+                    <textarea class="input-group-text" style="width: 100%;" name="decInputText" placeholder="inserire testo da cifrare"><?php echo isset($_REQUEST) && ((isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != "")) ? $_REQUEST["decInputText"] : "" ?></textarea>
                     <br></br>
                     <input class="btn btn-danger mb-3" type="submit" value="Decrypt"></input>
                 </form>
