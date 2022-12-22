@@ -32,7 +32,6 @@ function mycrypt($alphabet, $input, $key)
 <html>
 
 <head>
-    <!--<link rel="stylesheet" href="style.css">-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <title>Cesare</title>
 </head>
@@ -59,7 +58,7 @@ function mycrypt($alphabet, $input, $key)
                 </form>
             </div>
         </div>
-        <div id="results" class="alert alert-danger row" style="width: 100%; justify-content: center;">
+        <div id="results" class="alert alert-danger row" style="width: 60%; margin: auto;">
             <?php
 
             if (isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "") || (isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != ""))) {
@@ -79,8 +78,8 @@ function mycrypt($alphabet, $input, $key)
 
                         for ($i = 0; $i < count($alphabet); $i++) {
                             $scores[$i] = 0;
-                            $attempt = strtolower(mycrypt($alphabet, $_REQUEST["decInputText"], $i));
-                            $attempts[$i] = $attempt;
+                            $attempts[$i] = mycrypt($alphabet, $_REQUEST["decInputText"], $i);
+                            $attempt = strtolower($attempts[$i]);
                             //echo $i . " " . $attempt . " ";
                             $substring = explode(" ", $attempt);
                             for ($word = 0; $word < count($substring); $word++) {
@@ -96,19 +95,20 @@ function mycrypt($alphabet, $input, $key)
                         //echo implode($alphabet);
                         //echo max($scores)."/";
                         //echo array_search(max($scores), $scores);
-                        echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], -1 * (count($alphabet) - array_search(max($scores), $scores))) . "<br></br>Using key:<br></br>" . array_search(max($scores), $scores);
+                        $plausibleSolution = mycrypt($alphabet, $_REQUEST["decInputText"], -1 * (count($alphabet) - array_search(max($scores), $scores)));
+                        echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . $plausibleSolution . "<br></br>";
             ?>
                         <div class="accordion accordion-flush" id="accordionFlushExample">
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="flush-headingOne">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                        Show all
+                                        Show all possible results
                                     </button>
                                 </h2>
                                 <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
                                     <div class="accordion-body"><?php
                                                                 foreach ($attempts as $attamptedString)
-                                                                    echo "<div>" . $attamptedString . "</div>"
+                                                                    echo "<div " . ($attamptedString == $plausibleSolution ? "style=\"color: #dc3545; font-weight: bold;\"" : "") . ">" . $attamptedString . "</div>"
                                                                 ?></div>
                                 </div>
                             </div>
