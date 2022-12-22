@@ -58,7 +58,7 @@ function mycrypt($alphabet, $input, $key)
                 </form>
             </div>
         </div>
-        <div id="results" class="alert alert-danger row" style="width: 60%; margin: auto;">
+        <div id="results" class="alert alert-danger row" style="width: 60%; margin: auto; justify-content: center;">
             <?php
 
             if (isset($_REQUEST) && ((isset($_REQUEST["encInputText"]) && $_REQUEST["encInputText"] != "") || (isset($_REQUEST["decInputText"]) && $_REQUEST["decInputText"] != ""))) {
