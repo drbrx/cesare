@@ -73,12 +73,14 @@ function mycrypt($alphabet, $input, $key)
                     } else {
 
                         $scores = array();
+                        $attempts = array();
                         $length = strlen($_REQUEST["decInputText"]);
 
 
                         for ($i = 0; $i < count($alphabet); $i++) {
                             $scores[$i] = 0;
                             $attempt = strtolower(mycrypt($alphabet, $_REQUEST["decInputText"], $i));
+                            $attempts[$i] = $attempt;
                             //echo $i . " " . $attempt . " ";
                             $substring = explode(" ", $attempt);
                             for ($word = 0; $word < count($substring); $word++) {
@@ -95,7 +97,23 @@ function mycrypt($alphabet, $input, $key)
                         //echo max($scores)."/";
                         //echo array_search(max($scores), $scores);
                         echo "Decrypted the following string: <br></br>" . $_REQUEST["decInputText"] . "<br></br>Into:<br></br>" . mycrypt($alphabet, $_REQUEST["decInputText"], -1 * (count($alphabet) - array_search(max($scores), $scores))) . "<br></br>Using key:<br></br>" . array_search(max($scores), $scores);
-                        //echo "Decryption failed";
+            ?>
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="flush-headingOne">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        Show all
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><?php
+                                                                foreach ($attempts as $attamptedString)
+                                                                    echo "<div>" . $attamptedString . "</div>"
+                                                                ?></div>
+                                </div>
+                            </div>
+                        </div>
+            <?php                        //echo "Decryption failed";
                     }
                 }
             }
@@ -108,3 +126,19 @@ function mycrypt($alphabet, $input, $key)
 </body>
 
 </html>
+
+<script>
+    function showAttempts() {
+
+        document.getElementById("results").innerHTML += "<div>Attempted decryptions:</div>"
+
+
+        attemptList = <?php echo json_encode($attempts); ?>;
+        attemptList.forEach(function(attempt) {
+            console.log(attempt);
+            document.getElementById("results").innerHTML += "<div>" + attempt + "</div>"
+        })
+
+        document.getElementById("showAll").style.visibility = 'hidden';
+    }
+</script>
